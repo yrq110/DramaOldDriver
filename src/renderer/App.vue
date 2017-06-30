@@ -12,4 +12,7 @@
 
 <style>
   /* CSS */
+  body {
+    background: black;
+  }
 </style>

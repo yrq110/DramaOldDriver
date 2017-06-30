@@ -1,6 +1,6 @@
 {
-  "name": "mod-client",
-  "version": "0.0.0",
+  "name": "dramaolddriver-client",
+  "version": "0.0.1",
   "author": "yrq110 <yrq1025@gmail.com>",
   "description": "An electron-vue project",
   "license": null,
@@ -19,8 +19,8 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "mod-client",
-    "appId": "org.simulatedgreg.electron-vue",
+    "productName": "DramaOldDriver",
+    "appId": "org.yrq110.dod",
     "directories": {
       "output": "build"
     },
@@ -55,8 +55,9 @@
     }
   },
   "dependencies": {
-    "vue": "^2.3.3",
     "axios": "^0.16.1",
+    "rizu-ui": "0.0.14",
+    "vue": "^2.3.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
     "vuex": "^2.3.1"
