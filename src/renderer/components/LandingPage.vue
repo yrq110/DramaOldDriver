@@ -185,12 +185,14 @@
         this.$http.get(api + '/list')
           .then(function (res) {
             console.log('update data from url')
+            vm.list = []
+            vm.storageTitle = []
             vm.storage = res.data.resource
             for (let ele of vm.storage) {
               ele.collected = false
               vm.storageTitle.push(ele.title)
-              // console.log(ele)
             }
+            console.log(vm.storage.length)
             localStorage.movie = JSON.stringify(vm.storage)
             vm.getByPage()
             alert('data updated')
@@ -208,7 +210,6 @@
     created: function () {
     },
     mounted: function () {
-      // this.getAll()
     },
     computed: {
       version: () => {
