@@ -1,17 +1,7 @@
 body {
+  margin: 0; padding: 0;
   overflow-x: hidden;
   overflow-y: hidden;
-
-  &::-webkit-scrollbar {
-    width:10px;
-    background: inherit;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    width: 10px;
-    height: 20px;
-    background: white;
-  }
 }
 
 .landing {
@@ -42,6 +32,19 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    width: 100vw; height: 100vh;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      width:10px;
+      background: inherit;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      width: 10px;
+      height: 20px;
+      background: white;
+    }
 
     & .movie-card {
       cursor: pointer;
@@ -50,8 +53,6 @@ body {
       margin: 5px;
       overflow: hidden;
       
-      
-
       & .star {
         // display: none;
         position: absolute;
@@ -119,11 +120,11 @@ body {
 
     & > .movie-detail {
       position: fixed;
-      top: 10%; right: 10%;
-      bottom: 10%; left: 10%;
+      top: 5%; right: 5%;
+      bottom: 5%; left: 5%;
       border: 5px solid white;
       background: black;
-      overflow-x: hidden;
+      overflow-x: scroll;
       overflow-y: scroll;
       z-index: 3;
       &::-webkit-scrollbar {
@@ -140,10 +141,11 @@ body {
       & .close-btn {
         position: fixed;
         // right: 10%;
-        right: calc(10% + 3px);
+        right: calc(5% + 3px);
       }
 
       & .link-list {
+        padding: 0;
         list-style: none;
 
         & li {
@@ -159,6 +161,7 @@ body {
 
           & a {
             text-decoration: none;
+            white-space: nowrap;
             font-size: 1.5rem;
             line-height: 1.5rem;
             padding: 3px;
@@ -243,11 +246,31 @@ body {
     }
   }
 
+  & .update-btn {
+    position: fixed;
+    cursor: pointer;
+    user-select: none;
+    left: 0; bottom: 0;
+    border-radius: 20px;
+    font-size: 40px;
+    background: black;
+    color: white;
+    z-index: 12;
+    transition: .3s all ease;
+    &:hover {
+      background: white;
+      color: black;
+    }
+    &:active {
+      transform: scale(0.8)
+    }
+  }
+
   & .info-btn {
     position: fixed;
     cursor: pointer;
     user-select: none;
-    right: 0; bottom: 0;
+    right: 10px; bottom: 0;
     border-radius: 20px;
     font-size: 40px;
     background: black;
@@ -255,6 +278,10 @@ body {
     z-index: 12;
     transition: .3s all ease;
 
+    &:hover {
+      background: white;
+      color: black;
+    }
     &:hover + .info-content{
       visibility: visible;
       opacity: 1;

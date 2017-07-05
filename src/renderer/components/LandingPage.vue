@@ -8,14 +8,14 @@
         <RzButton type="ace" @click="getAll"><template slot="inner-txt">Go</template></RzButton>
       </div>
     </div>
-    <div class="movie-list">
-      <div class="movie-card" v-for="(item, index) in storage" @click="showDetail(item)" v-show="!isSearch&&!isCollect">
+    <div class="movie-list" @scroll="handleScroll($event)" v-show="!isWelcome">
+      <div class="movie-card" v-for="(item, index) in list" @click="showDetail(item)" v-show="!isSearch&&!isCollect">
         <i class="material-icons star" @click="collectMovie(index, $event)" v-show="item.collected">star</i>
         <i class="material-icons star" @click="collectMovie(index, $event)" v-show="!item.collected">star_border</i>
         <div class="thumb">
           <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
         </div>
-        <div class="title">{{ item.title.split('/')[0] }}</div> 
+        <div class="title">{{ item.title }}</div> 
       </div>
       <div class="movie-card" v-for="item in searchResult" @click="showDetail(item)" v-show="isSearch&&(searchResult.length !== 0)">
         <i class="material-icons star" @click="collectMovie(index, $event)" v-show="item.collected">star</i>
@@ -23,7 +23,7 @@
         <div class="thumb">
           <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
         </div>
-        <div class="title">{{ item.title.split('/')[0] }}</div> 
+        <div class="title">{{ item.title }}</div> 
       </div>
       <div class="nothing-message" v-show="isSearch&&(searchResult.length == 0)">
          _(:3 」∠)_ Nothing found
@@ -34,12 +34,12 @@
         <div class="thumb">
           <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
         </div>
-        <div class="title">{{ item.title.split('/')[0] }}</div> 
+        <div class="title">{{ item.title }}</div>
       </div>
       <div class="movie-detail" v-show="isShowDetail">
         <RzButton class="close-btn" type="mg" @click="cancel">Close</RzButton>
-        <ul class="link-list">
-          <li v-for="source in selectItem.link"><span>{{source.link_type}}</span><a :href="source.link" >{{ source.name }}</a></li>
+        <ul class="link-list" v-for="item in selectItem">
+          <li v-for="source in item"><span>{{source.type}}</span><a :href="source.link" >{{ source.name }}</a></li>
         </ul>
       </div>
     </div>
@@ -52,25 +52,25 @@
       <input class="search-input" type="text" name="search" v-model="searchStr" placeholder="搜索"/>
       <i class="material-icons icon" @click="closeSearchBar">close</i>
     </div>
+    <i class="material-icons update-btn">update</i>
     <i class="material-icons info-btn">info_outline</i>
     <div class="info-content">
       <ul class="info-list">
         <li><span>Core:</span>  <span>Vue + Electron</span></li>
-        <li><span>UI:</span>  <span>RizuUI</span></li>
+        <li><span>UI:</span>  <span>Custom + RizuUI</span></li>
         <li><span>Author:</span> <span>yrq110</span></li>
         <li><span>Version:</span> <span>{{ version }}</span></li>
       </ul>
     </div>
-    
   </div>
 </template>
 
 <script>
   // import movieData from '../assets/data.json'
-  import movieData from '../assets/6v_data.json'
+  // import movieData from '../assets/6v_data.json'
   import config from '../../../package.json'
   const ipc = require('electron').ipcRenderer
-  // const api = 'http://dod-server.herokuapp.com'
+  const api = 'http://dodserver.leanapp.cn'
   export default {
     name: 'landing-page',
     data () {
@@ -84,97 +84,89 @@
         isMarkActive: false,
         useTool: false,
         selectItem: {},
-        storage: {},
+        storage: [],
         storageTitle: [],
         searchResult: [],
         textStroke: [
           'white', '#222', 'grey'
         ],
-        searchStr: ''
+        searchStr: '',
+        list: [],
+        limit: 6,
+        page: 1
       }
     },
     components: {},
-    created: () => {
-    },
-    mounted: () => {
-    },
     methods: {
       collectMovie (index, event) {
         event.stopPropagation()
-        // item.collected = !item.collected
         this.storage[index].collected = !this.storage[index].collected
         localStorage.movie = JSON.stringify(this.storage)
-        // return item
-        // console.log(event)
-        // console.log(this.storage[index])
-        // this.$nextTick(function () {
-        //   this.storage[index].collected = !this.storage[index].collected
-        // })
       },
       open (link) {
         this.$electron.shell.openExternal(link)
       },
       showDetail (item) {
         this.isShowDetail = true
-        this.selectItem = item
+        this.selectItem = item.resource
       },
       cancel () {
         this.isShowDetail = false
       },
       getAll () {
-        var body = document.querySelector('body')
-        body.style.overflowY = 'scroll'
         if (typeof (localStorage.movie) === 'undefined') {
-          this.isWelcome = false
-          this.storage = movieData
-          localStorage.movie = JSON.stringify(movieData)
-          for (var e of this.storage) {
-            this.storageTitle.push(e.title.split('/')[0])
-          }
-          // var vm = this
-          // this.$http.get(api + '/list')
-          //   .then(function (res) {
-          //     console.log('get data from url')
-          //     vm.isWelcome = false
-          //     vm.storage = res.data
-          //     localStorage.movie = JSON.stringify(res.data)
-          //     for (var value of vm.storage) {
-          //       vm.storageTitle.push(value.title.split('/')[0])
-          //     }
-          //   })
-          //   .catch(function (error) {
-          //     console.log(error)
-          //     vm.storage = ''
-          //   })
+          // 1. local data
+          // this.isWelcome = false
+          // this.storage = movieData
+          // localStorage.movie = JSON.stringify(movieData)
+          // for (let a of this.storage) {
+          //   this.storageTitle.push(a.title)
+          // }
+
+          // 2. internet data
+          var vm = this
+          this.$http.get(api + '/list')
+            .then(function (res) {
+              console.log('get data from url')
+              vm.storage = res.data.resource
+              for (let ele of vm.storage) {
+                ele.collected = false
+                vm.storageTitle.push(ele.title)
+                console.log(ele)
+              }
+              localStorage.movie = JSON.stringify(vm.storage)
+              vm.getByPage()
+              // vm.isWelcome = false
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
         } else {
           console.log('get data from localStorage')
-          this.isWelcome = false
+          // this.isWelcome = false
           this.storage = JSON.parse(localStorage.movie)
-          this.storage.forEach(function (val, index) {
-            // val.collected = false
-          })
-          for (var a of this.storage) {
-            this.storageTitle.push(a.title.split('/')[0])
+          for (let a of this.storage) {
+            this.storageTitle.push(a.title)
           }
+          this.getByPage()
         }
+        // console.log(this.storage.length)
       },
-      getRandom () {
-        var vm = this
-        this.$http.get('http://127.0.0.1:3000/random')
-          .then(function (res) {
-            vm.random = res.data
-            console.log(res.data)
-            localStorage.movie = JSON.stringify(res.data)
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
+      getByPage () {
+        console.log('get by page')
+        for (let i = (this.page - 1) * this.limit; i < this.page * this.limit; i++) {
+          this.list = this.list.concat(this.storage[i])
+        }
+        this.isWelcome = false
+        // console.log(this.list.length)
       },
-      readStorage () {
-        this.storage = JSON.parse(localStorage.movie)
-      },
-      inputChange (e) {
-        console.log(e.value)
+      handleScroll (e) {
+        if (e.target.scrollTop + e.target.offsetHeight + 5 > e.target.scrollHeight) {
+          this.page = this.page + 1
+          console.log('reach bottom')
+        } else {
+          console.log('not yet')
+        }
       },
       showSearchBar () {
         this.isSearchBar = true
@@ -187,12 +179,16 @@
       },
       showCollectMovie () {
         this.isCollect = !this.isCollect
-        // this.isMarkActive = !this.isMarkActive
       },
       closeWindow () {
         console.log('close')
         ipc.send('close-window', null)
       }
+    },
+    created: function () {
+    },
+    mounted: function () {
+      // this.getAll()
     },
     computed: {
       version: () => {
@@ -200,7 +196,7 @@
       }
     },
     watch: {
-      searchStr: function (val) {
+      searchStr (val) {
         if (val !== '') {
           this.isSearch = true
           var result = []
@@ -216,6 +212,10 @@
           this.isSearch = false
         }
         console.log(this.isSearch)
+      },
+      page (val) {
+        console.log('page value change')
+        this.getByPage()
       }
     }
   }

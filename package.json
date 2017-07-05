@@ -1,9 +1,9 @@
 {
   "name": "dramaolddriver-client",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "yrq110 <yrq1025@gmail.com>",
   "description": "An electron-vue project",
-  "license": null,
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && build",
