@@ -5,7 +5,7 @@
   "description": "An electron-vue project",
   "license": "MIT",
   "main": "./dist/electron/main.js",
-  "scripts": {dd
+  "scripts": {
     "build": "node .electron-vue/build.js && build",
     "build:dir": "node .electron-vue/build.js && build --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
