@@ -52,7 +52,7 @@
       <input class="search-input" type="text" name="search" v-model="searchStr" placeholder="搜索"/>
       <i class="material-icons icon" @click="closeSearchBar">close</i>
     </div>
-    <i class="material-icons update-btn">update</i>
+    <i class="material-icons update-btn" @click="updateData">update</i>
     <i class="material-icons info-btn">info_outline</i>
     <div class="info-content">
       <ul class="info-list">
@@ -132,7 +132,7 @@
               for (let ele of vm.storage) {
                 ele.collected = false
                 vm.storageTitle.push(ele.title)
-                console.log(ele)
+                // console.log(ele)
               }
               localStorage.movie = JSON.stringify(vm.storage)
               vm.getByPage()
@@ -179,6 +179,26 @@
       },
       showCollectMovie () {
         this.isCollect = !this.isCollect
+      },
+      updateData () {
+        var vm = this
+        this.$http.get(api + '/list')
+          .then(function (res) {
+            console.log('update data from url')
+            vm.storage = res.data.resource
+            for (let ele of vm.storage) {
+              ele.collected = false
+              vm.storageTitle.push(ele.title)
+              // console.log(ele)
+            }
+            localStorage.movie = JSON.stringify(vm.storage)
+            vm.getByPage()
+            alert('data updated')
+            // vm.isWelcome = false
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
       },
       closeWindow () {
         console.log('close')
