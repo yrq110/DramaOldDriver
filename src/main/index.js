@@ -1,7 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow } from 'electron'
-
+const ipc = require('electron').ipcMain
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -25,6 +25,7 @@ function createWindow () {
     width: 1000,
     transparent: true,
     frame: false,
+    // resizable: false,
     // enable CORS
     webPreferences: {
       webSecurity: false
@@ -52,6 +53,9 @@ app.on('activate', () => {
   }
 })
 
+ipc.on('close-window', (event, arg) => {
+  app.quit()
+})
 /**
  * Auto Updater
  *

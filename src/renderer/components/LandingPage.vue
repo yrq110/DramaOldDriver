@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper">
+  <div class="landing">
     <div class="mask" v-show="isWelcome">
       <RzAnima type="text-1" :textStroke="textStroke" class="logo-anime">
         <template slot="text">Drama</template>
@@ -8,13 +8,29 @@
         <RzButton type="ace" @click="getAll"><template slot="inner-txt">Go</template></RzButton>
       </div>
     </div>
-    <!--<div class="control">-->
-      <!--<RzButton type="ace" @click="getAll"><template slot="inner-txt">获取全部</template></RzButton>-->
-      <!--<RzButton type="ace" @click="getRandom"><template slot="inner-txt">随机抽取</template></RzButton>
-      <RzButton type="ace" @click="readStorage"><template slot="inner-txt">读取</template></RzButton>-->
-    <!--</div>-->
     <div class="movie-list">
-      <div class="movie-card" v-for="item in storage" @click="showDetail(item)">
+      <div class="movie-card" v-for="(item, index) in storage" @click="showDetail(item)" v-show="!isSearch&&!isCollect">
+        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="item.collected">star</i>
+        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="!item.collected">star_border</i>
+        <div class="thumb">
+          <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
+        </div>
+        <div class="title">{{ item.title.split('/')[0] }}</div> 
+      </div>
+      <div class="movie-card" v-for="item in searchResult" @click="showDetail(item)" v-show="isSearch&&(searchResult.length !== 0)">
+        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="item.collected">star</i>
+        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="!item.collected">star_border</i>
+        <div class="thumb">
+          <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
+        </div>
+        <div class="title">{{ item.title.split('/')[0] }}</div> 
+      </div>
+      <div class="nothing-message" v-show="isSearch&&(searchResult.length == 0)">
+         _(:3 」∠)_ Nothing found
+      </div>
+      <div class="movie-card" v-for="(item, index) in storage" @click="showDetail(item)" v-show="!isSearch&&isCollect&&item.collected">
+        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="item.collected">star</i>
+        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="!item.collected">star_border</i>
         <div class="thumb">
           <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
         </div>
@@ -27,13 +43,34 @@
         </ul>
       </div>
     </div>
-    <!--<div class="toolkit">
-
-    </div>-->
+    <div class="toolkit" v-show="!useTool">
+      <div class="tool-btn" @click="showSearchBar"><i class="material-icons icon">search</i></div>
+      <div class="tool-btn" @click="showCollectMovie"><i class="material-icons icon" @click="isMarkActive = !isMarkActive" :class="{active: isMarkActive}">bookmark_border</i></div>
+      <div class="tool-btn" @click="closeWindow"><i class="material-icons icon">close</i></div>
+    </div>
+    <div class="searchBar" v-show="isSearchBar">
+      <input class="search-input" type="text" name="search" v-model="searchStr" placeholder="搜索"/>
+      <i class="material-icons icon" @click="closeSearchBar">close</i>
+    </div>
+    <i class="material-icons info-btn">info_outline</i>
+    <div class="info-content">
+      <ul class="info-list">
+        <li><span>Core:</span>  <span>Vue + Electron</span></li>
+        <li><span>UI:</span>  <span>RizuUI</span></li>
+        <li><span>Author:</span> <span>yrq110</span></li>
+        <li><span>Version:</span> <span>{{ version }}</span></li>
+      </ul>
+    </div>
+    
   </div>
 </template>
 
 <script>
+  // import movieData from '../assets/data.json'
+  import movieData from '../assets/6v_data.json'
+  import config from '../../../package.json'
+  const ipc = require('electron').ipcRenderer
+  // const api = 'http://dod-server.herokuapp.com'
   export default {
     name: 'landing-page',
     data () {
@@ -41,30 +78,39 @@
         random: '',
         isShowDetail: false,
         isWelcome: true,
+        isSearch: false,
+        isCollect: false,
+        isSearchBar: false,
+        isMarkActive: false,
+        useTool: false,
         selectItem: {},
         storage: {},
+        storageTitle: [],
+        searchResult: [],
         textStroke: [
           'white', '#222', 'grey'
-        ]
+        ],
+        searchStr: ''
       }
     },
     components: {},
     created: () => {
     },
     mounted: () => {
-      // console.log('mounted')
-      // var vm = this
-      // cons
-      // this.$http.get('http://127.0.0.1:3000/list')
-      //   .then(function (res) {
-      //     vm.storage = res.data
-      //     localStorage.movie = JSON.stringify(res.data)
-      //   })
-      //   .catch(function (error) {
-      //     console.log(error)
-      //   })
     },
     methods: {
+      collectMovie (index, event) {
+        event.stopPropagation()
+        // item.collected = !item.collected
+        this.storage[index].collected = !this.storage[index].collected
+        localStorage.movie = JSON.stringify(this.storage)
+        // return item
+        // console.log(event)
+        // console.log(this.storage[index])
+        // this.$nextTick(function () {
+        //   this.storage[index].collected = !this.storage[index].collected
+        // })
+      },
       open (link) {
         this.$electron.shell.openExternal(link)
       },
@@ -79,22 +125,37 @@
         var body = document.querySelector('body')
         body.style.overflowY = 'scroll'
         if (typeof (localStorage.movie) === 'undefined') {
-          var vm = this
-          this.$http.get('http://127.0.0.1:3000/list')
-            .then(function (res) {
-              console.log('get data from url')
-              vm.isWelcome = false
-              vm.storage = res.data
-              localStorage.movie = JSON.stringify(res.data)
-            })
-            .catch(function (error) {
-              console.log(error)
-              vm.storage = ''
-            })
+          this.isWelcome = false
+          this.storage = movieData
+          localStorage.movie = JSON.stringify(movieData)
+          for (var e of this.storage) {
+            this.storageTitle.push(e.title.split('/')[0])
+          }
+          // var vm = this
+          // this.$http.get(api + '/list')
+          //   .then(function (res) {
+          //     console.log('get data from url')
+          //     vm.isWelcome = false
+          //     vm.storage = res.data
+          //     localStorage.movie = JSON.stringify(res.data)
+          //     for (var value of vm.storage) {
+          //       vm.storageTitle.push(value.title.split('/')[0])
+          //     }
+          //   })
+          //   .catch(function (error) {
+          //     console.log(error)
+          //     vm.storage = ''
+          //   })
         } else {
           console.log('get data from localStorage')
           this.isWelcome = false
           this.storage = JSON.parse(localStorage.movie)
+          this.storage.forEach(function (val, index) {
+            // val.collected = false
+          })
+          for (var a of this.storage) {
+            this.storageTitle.push(a.title.split('/')[0])
+          }
         }
       },
       getRandom () {
@@ -111,179 +172,55 @@
       },
       readStorage () {
         this.storage = JSON.parse(localStorage.movie)
+      },
+      inputChange (e) {
+        console.log(e.value)
+      },
+      showSearchBar () {
+        this.isSearchBar = true
+        this.useTool = true
+      },
+      closeSearchBar () {
+        this.searchStr = ''
+        this.isSearchBar = false
+        this.useTool = false
+      },
+      showCollectMovie () {
+        this.isCollect = !this.isCollect
+        // this.isMarkActive = !this.isMarkActive
+      },
+      closeWindow () {
+        console.log('close')
+        ipc.send('close-window', null)
+      }
+    },
+    computed: {
+      version: () => {
+        return config.version
+      }
+    },
+    watch: {
+      searchStr: function (val) {
+        if (val !== '') {
+          this.isSearch = true
+          var result = []
+          var re = new RegExp(val)
+          var vm = this
+          this.storageTitle.forEach(function (e, index) {
+            if (e.match(re)) {
+              result.push(vm.storage[index])
+            }
+          })
+          this.searchResult = result
+        } else {
+          this.isSearch = false
+        }
+        console.log(this.isSearch)
       }
     }
-    // computed: {
-    //   storage: () => {
-    //     return typeof (localStorage.movie) === 'undefined' ? '' : JSON.parse(localStorage.movie)
-    //   }
-    // }
   }
 </script>
 
-<style>
-  body {
-    overflow-x: hidden;
-    overflow-y: hidden;
-  }
-
-  body::-webkit-scrollbar {
-    width:10px;
-    background: inherit;
-  }
-
-  body::-webkit-scrollbar-thumb {
-    width: 10px;
-    height: 20px;
-    background: white;
-  }
-
-  .mask {
-    position: fixed;
-    top: 0; left: 0;
-    bottom: 0; right: 0;
-    z-index: 999;
-    background: black;
-  }
-
-  .mask .logo-anime {
-    position: absolute;
-    top: 40%;
-    width: 100%;
-    transform: translateY(-50%);
-  }
-
-  .mask .go-btn {
-    position: absolute;
-    bottom: 30%;left: 50%;
-    background: white;
-    transform: translateX(-50%);
-  }
-  
-
-  .movie-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-
-  .control div{
-    margin: 0 10px;
-  }
-
-  .movie-card {
-    cursor: pointer;
-    margin: 5px;
-    position: relative;
-    width: 300px; height: 400px;
-    overflow: hidden;
-  }
-
-  .movie-card .thumb {
-    position: absolute;
-    width: 300px; height: 300px;
-    overflow: hidden;
-  }
-
-  .movie-card .image {
-    /*position: absolute;*/
-    width: 300px; height: 300px; 
-    background-image: url("http://opctl018t.bkt.clouddn.com/dva.jpg");
-    background-position: center; 
-    background-repeat: no-repeat; 
-    background-size: cover;
-    transition: .3s all ease;
-    transform-origin: 50% 50%;
-  }
-
-  .movie-card:hover .image {
-    transform: scale(1.3)
-  }
-
-  .movie-card .title {
-    position: absolute;
-    top: 300px;
-    width: 290px; height: 40px;
-    line-height: 40px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.5rem;
-    border: 5px solid white;
-    color: white;
-    background: black;
-    user-select: none;
-    transition: .3s all ease;
-  }
-
-  .movie-card:hover .title {
-    color: black;
-    background: white;
-  }
-
-  .movie-detail {
-    position: fixed;
-    top: 10%; right: 10%;
-    bottom: 10%; left: 10%;
-    border: 5px solid white;
-    background: black;
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
-
-  .movie-detail::-webkit-scrollbar {
-    width:10px;
-    background: inherit;
-  }
-
-  .movie-detail::-webkit-scrollbar-thumb {
-    width: 10px;
-    height: 20px;
-    background: white;
-  }
-
-  .movie-detail .close-btn {
-    position: fixed;
-    right: calc(10% + 13px);
-  }
-
-  .movie-detail .link-list {
-    list-style: none;
-  }
-  .movie-detail .link-list li {
-    /*height: 2rem;*/
-    margin: 20px 10px;
-    color: white;
-  }
-
-  .movie-detail .link-list li span {
-    margin: 10px 10px;
-    padding: 2px;
-    color: white;
-    border: 1px dashed white;
-  }
-
-  .movie-detail .link-list li a {
-    text-decoration: none;
-    font-size: 1.5rem;
-    line-height: 1.5rem;
-    padding: 3px;
-    background: black;
-    color: white;
-    border: 2px solid white;
-    transition: .3s all ease;
-  }
-
-  .movie-detail .link-list li a:hover {
-    margin-left: 20px;
-    color: black;
-    background: white;
-  }
-
-  .toolkit {
-    position: fixed;
-    bottom: 0;left: 0; right: 0;
-    width: 100%; height: 40px;
-    border: 5px solid white;
-    background: black;
-  }
+<style lang="less">
+  @import './LandingPage.less';
 </style>
