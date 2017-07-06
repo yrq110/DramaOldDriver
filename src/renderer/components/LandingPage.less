@@ -28,6 +28,13 @@ body {
     }
   }
 
+  & > .loading-anime {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10;
+  }
+
   & > .movie-list {
     display: flex;
     flex-wrap: wrap;
@@ -58,7 +65,7 @@ body {
         position: absolute;
         top: 0; right: 0;
         font-size: 40px;
-        color: yellow;
+        color: black;
         user-select: none;
         transition: .3s all ease;
         z-index: 2;
@@ -90,7 +97,7 @@ body {
       & .title {
         position: absolute;
         top: 300px;
-        width: 290px; height: 40px;
+        width: 290px; height: 50px;
         line-height: 40px;
         text-align: center;
         font-weight: bold;
@@ -98,13 +105,30 @@ body {
         border: 5px solid white;
         color: white;
         background: black;
+        white-space: nowrap;
+        overflow-x: scroll;
+        overflow-y: hidden;
         user-select: none;
         transition: .3s all ease;
+
+        &::-webkit-scrollbar {
+          height:8px;
+          background: inherit;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          height: 8px;
+          background: white;
+        }
       }
 
       &:hover .title {
         color: black;
         background: white;
+      }
+
+      &:hover .title::-webkit-scrollbar-thumb {
+        background: black;
       }
     }
 
@@ -127,6 +151,7 @@ body {
       overflow-x: scroll;
       overflow-y: scroll;
       z-index: 3;
+
       &::-webkit-scrollbar {
         width:10px;
         background: inherit;
@@ -134,14 +159,12 @@ body {
 
       &::-webkit-scrollbar-thumb {
         width: 10px;
-        height: 20px;
         background: white;
       }
 
       & .close-btn {
         position: fixed;
-        // right: 10%;
-        right: calc(5% + 3px);
+        right: 5% + 1px;
       }
 
       & .link-list {

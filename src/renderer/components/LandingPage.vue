@@ -8,18 +8,18 @@
         <RzButton type="ace" @click="getAll"><template slot="inner-txt">Go</template></RzButton>
       </div>
     </div>
-    <div class="movie-list" @scroll="handleScroll($event)" v-show="!isWelcome">
+    <RzAnima type="ball-3" v-show="isUpdating" class="loading-anime"></RzAnima>
+    <!--<RzAnima type="ball-3" class="loading-anime"></RzAnima>-->
+    <div class="movie-list" @scroll="handleScroll($event)" v-show="!isWelcome&&!isUpdating">
       <div class="movie-card" v-for="(item, index) in list" @click="showDetail(item)" v-show="!isSearch&&!isCollect">
-        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="item.collected">star</i>
-        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="!item.collected">star_border</i>
+        <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
         <div class="thumb">
           <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
         </div>
         <div class="title">{{ item.title }}</div> 
       </div>
       <div class="movie-card" v-for="item in searchResult" @click="showDetail(item)" v-show="isSearch&&(searchResult.length !== 0)">
-        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="item.collected">star</i>
-        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="!item.collected">star_border</i>
+        <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
         <div class="thumb">
           <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
         </div>
@@ -29,8 +29,7 @@
          _(:3 」∠)_ Nothing found
       </div>
       <div class="movie-card" v-for="(item, index) in storage" @click="showDetail(item)" v-show="!isSearch&&isCollect&&item.collected">
-        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="item.collected">star</i>
-        <i class="material-icons star" @click="collectMovie(index, $event)" v-show="!item.collected">star_border</i>
+        <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
         <div class="thumb">
           <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
         </div>
@@ -78,6 +77,7 @@
         random: '',
         isShowDetail: false,
         isWelcome: true,
+        isUpdating: false,
         isSearch: false,
         isCollect: false,
         isSearchBar: false,
@@ -100,6 +100,7 @@
     methods: {
       collectMovie (index, event) {
         event.stopPropagation()
+        console.log(this.storage[index].title)
         this.storage[index].collected = !this.storage[index].collected
         localStorage.movie = JSON.stringify(this.storage)
       },
@@ -129,11 +130,14 @@
             .then(function (res) {
               console.log('get data from url')
               vm.storage = res.data.resource
+              vm.storage = vm.storage.filter(item => item.resource.length !== 0)
               for (let ele of vm.storage) {
                 ele.collected = false
                 vm.storageTitle.push(ele.title)
+                console.log(ele.title)
                 // console.log(ele)
               }
+              console.log(vm.storage.length)
               localStorage.movie = JSON.stringify(vm.storage)
               vm.getByPage()
               // vm.isWelcome = false
@@ -156,13 +160,15 @@
         console.log('get by page')
         for (let i = (this.page - 1) * this.limit; i < this.page * this.limit; i++) {
           this.list = this.list.concat(this.storage[i])
+          console.log(this.storage[i])
         }
         this.isWelcome = false
-        // console.log(this.list.length)
+        console.log(this.list.length)
       },
       handleScroll (e) {
         if (e.target.scrollTop + e.target.offsetHeight + 5 > e.target.scrollHeight) {
           this.page = this.page + 1
+          this.getByPage()
           console.log('reach bottom')
         } else {
           console.log('not yet')
@@ -181,25 +187,41 @@
         this.isCollect = !this.isCollect
       },
       updateData () {
-        var vm = this
+        var collectMovie = []
+        this.page = 1
+        this.list = []
+        this.storageTitle = []
+        this.storage.forEach(function (value, index) {
+          if (value.collected === true) collectMovie.push(value.title)
+        })
+        this.storage = []
+        this.isUpdating = true
+        var v = this
         this.$http.get(api + '/list')
           .then(function (res) {
             console.log('update data from url')
-            vm.list = []
-            vm.storageTitle = []
-            vm.storage = res.data.resource
-            for (let ele of vm.storage) {
-              ele.collected = false
-              vm.storageTitle.push(ele.title)
+            // vm.list = []
+            // vm.storageTitle = []
+            v.isUpdating = false
+            v.storage = res.data.resource
+            v.storage = v.storage.filter(item => item.resource.length !== 0)
+            for (let ele of v.storage) {
+              collectMovie.forEach(function (value, index) {
+                ele.collected = ele.title === value
+              })
+              // ele.collected = false
+              console.log(ele.title)
+              v.storageTitle.push(ele.title)
             }
-            console.log(vm.storage.length)
-            localStorage.movie = JSON.stringify(vm.storage)
-            vm.getByPage()
-            alert('data updated')
+            console.log(v.storage.length)
+            localStorage.movie = JSON.stringify(v.storage)
+            v.getByPage()
+            alert('数据更新完成，老哥请重启一下谢谢')
             // vm.isWelcome = false
           })
           .catch(function (error) {
             console.log(error)
+            alert('error')
           })
       },
       closeWindow () {
@@ -233,11 +255,11 @@
           this.isSearch = false
         }
         console.log(this.isSearch)
-      },
-      page (val) {
-        console.log('page value change')
-        this.getByPage()
       }
+      // page (val) {
+      //   console.log('page value change')
+      //   this.getByPage()
+      // }
     }
   }
 </script>
