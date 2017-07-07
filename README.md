@@ -5,7 +5,7 @@ A tool for finding drama resource
 ## ScreenShot
 
 <p align="center">
-  <img src="https://github.com/yrq110/TinyGoogle/blob/master/static/screenshots/homepage.png" width="700px">
+  <img src="https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/homepage.png" width="700px">
 </p>
 
 ## Command
@@ -30,11 +30,11 @@ A tool for finding drama resource
 
 * Real-time Search
 
-![](https://github.com/yrq110/TinyGoogle/blob/master/static/screenshots/search.png)
+![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/search.png)
 
 * Favorites
 
-![](https://github.com/yrq110/TinyGoogle/blob/master/static/screenshots/favorites.png)
+![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/favorites.png)
 
 * Data Update
 
