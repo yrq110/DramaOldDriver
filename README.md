@@ -1,12 +1,17 @@
-# DramaOldDriver-client
+# DramaOldDriver
 
-A tool for finding drama resource
+A desktop app for finding drama resource
 
 ## ScreenShot
 
 <p align="center">
   <img src="https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/homepage.png" width="700px">
 </p>
+
+## Built by
+* [Electron](https://github.com/electron/electron)
+* [Vue](https://github.com/vuejs/vue)
+* [RizuUI](https://github.com/yrq110/RizuUI)
 
 ## Command
 
@@ -37,6 +42,8 @@ A tool for finding drama resource
 ![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/favorites.png)
 
 * Data Update
+
+Resource data update everyday.
 
 ## License
 

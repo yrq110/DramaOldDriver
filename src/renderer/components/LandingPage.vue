@@ -216,7 +216,7 @@
             console.log(v.storage.length)
             localStorage.movie = JSON.stringify(v.storage)
             v.getByPage()
-            alert('数据更新完成，老哥请重启一下谢谢')
+            alert('Data update. If there are anything wrong, pls restart it.')
             // vm.isWelcome = false
           })
           .catch(function (error) {
