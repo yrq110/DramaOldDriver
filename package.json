@@ -2,7 +2,7 @@
   "name": "dramaolddriver-client",
   "version": "0.0.5",
   "author": "yrq110 <yrq1025@gmail.com>",
-  "description": "An electron-vue project",
+  "description": "find drama resource easily",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
