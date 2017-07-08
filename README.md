@@ -8,6 +8,11 @@ A desktop app for finding drama resource
   <img src="https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/homepage.png" width="700px">
 </p>
 
+
+## Download
+
+[Releases](https://github.com/yrq110/DramaOldDriver/releases)
+
 ## Built by
 * [Electron](https://github.com/electron/electron)
 * [Vue](https://github.com/vuejs/vue)
@@ -43,7 +48,7 @@ A desktop app for finding drama resource
 
 * Data Update
 
-Resource data update everyday.
+Resource data updates everyday.
 
 ## License
 

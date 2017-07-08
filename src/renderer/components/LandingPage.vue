@@ -211,7 +211,7 @@
             console.log(v.storage.length)
             localStorage.movie = JSON.stringify(v.storage)
             v.getByPage()
-            alert('Data update. If there are anything wrong, pls restart it.')
+            alert('Data updated. If there are anything wrong, pls restart :)')
           })
           .catch(function (error) {
             console.log(error)
