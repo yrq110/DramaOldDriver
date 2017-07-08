@@ -9,7 +9,6 @@
       </div>
     </div>
     <RzAnima type="ball-3" v-show="isUpdating" class="loading-anime"></RzAnima>
-    <!--<RzAnima type="ball-3" class="loading-anime"></RzAnima>-->
     <div class="movie-list" @scroll="handleScroll($event)" v-show="!isWelcome&&!isUpdating">
       <div class="movie-card" v-for="(item, index) in list" @click="showDetail(item)" v-show="!isSearch&&!isCollect">
         <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
@@ -147,7 +146,6 @@
             })
         } else {
           console.log('get data from localStorage')
-          // this.isWelcome = false
           this.storage = JSON.parse(localStorage.movie)
           for (let a of this.storage) {
             this.storageTitle.push(a.title)
@@ -200,8 +198,6 @@
         this.$http.get(api + '/list')
           .then(function (res) {
             console.log('update data from url')
-            // vm.list = []
-            // vm.storageTitle = []
             v.isUpdating = false
             v.storage = res.data.resource
             v.storage = v.storage.filter(item => item.resource.length !== 0)
@@ -209,7 +205,6 @@
               collectMovie.forEach(function (value, index) {
                 ele.collected = ele.title === value
               })
-              // ele.collected = false
               console.log(ele.title)
               v.storageTitle.push(ele.title)
             }
@@ -217,7 +212,6 @@
             localStorage.movie = JSON.stringify(v.storage)
             v.getByPage()
             alert('Data update. If there are anything wrong, pls restart it.')
-            // vm.isWelcome = false
           })
           .catch(function (error) {
             console.log(error)
@@ -256,10 +250,6 @@
         }
         console.log(this.isSearch)
       }
-      // page (val) {
-      //   console.log('page value change')
-      //   this.getByPage()
-      // }
     }
   }
 </script>

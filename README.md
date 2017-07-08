@@ -45,10 +45,14 @@ A desktop app for finding drama resource
 
 Resource data update everyday.
 
+
+## Package
+
+* [win32_x64(百度网盘)](https://pan.baidu.com/s/1hrEzih2)
+
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
-
 
 ---
 
