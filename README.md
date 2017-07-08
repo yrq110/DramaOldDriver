@@ -8,7 +8,6 @@ A desktop app for finding drama resource
   <img src="https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/homepage.png" width="700px">
 </p>
 
-
 ## Download
 
 [Releases](https://github.com/yrq110/DramaOldDriver/releases)
@@ -20,21 +19,16 @@ A desktop app for finding drama resource
 
 ## Command
 
-1. install requirements
+```bash
+# install requirements
+npm install 
 
-  ```bash
-  npm install 
-  ```
-2. run
+# run
+npm run dev
 
-  ```bash
-  npm run dev
-  ```
-3. build
-
-  ```bash
-  npm run build
-  ```
+# build
+npm run build
+```
 
 ## Function
 
