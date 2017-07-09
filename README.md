@@ -34,6 +34,10 @@ npm run build
 
 ![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/list-view.png)
 
+* Resource View
+
+![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/resource-view.png)
+
 * Real-time Search
 
 ![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/search-view.png)
