@@ -35,13 +35,107 @@ body {
     z-index: 10;
   }
 
-  & > .movie-list {
+  & > .viewtype {
+    z-index: 10;
+    display: flex;
+    width: 100%; height: 40px;
+    margin: 8px;
+    justify-content: center;
+
+    section {
+      cursor: pointer;
+      position: relative;
+
+      & .icon {
+        position: relative;
+        user-select: none;
+        font-size: 40px;
+        z-index: 5;
+      }
+
+      & .on {
+        color: black;
+      }
+
+      & .off {
+        color: white;
+      }
+
+      & .move-rect {  
+        position: absolute;
+        left: 0; top: 0;
+        width: 40px; height: 40px;
+        background: white;
+        border-radius: 5px;
+        transition: all .3s ease;
+        z-index: 4;
+      }
+
+      & .right {
+        transform: translateX(105%);
+      }
+    }
+  }
+
+  & > .list-view {
+
+    width: 100vw; height: 90vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      width:10px;
+      background: inherit;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      width: 10px;
+      background: white;
+    }
+
+    & .movie-list {
+      padding: 0 10rem;
+      list-style: none;
+      
+      & li {
+        cursor: pointer;
+        color: white;
+        white-space: nowrap;
+        overflow: hidden;
+        padding-left: 5px;
+        border: 2px solid white;
+        border-bottom: 0;
+        transition: .3s all ease;
+
+        &:last-child {
+          border-bottom: 2px solid white;
+        }
+
+        &:hover {
+          margin: 0 20px;
+          color: black;
+          background: white;
+        }
+
+        & .star {
+          // position: relative;
+          // right: 0;
+          color: yellow;
+          user-select: none;
+          transition: .3s all ease;
+          z-index: 2;
+        }
+      }
+    }
+  } 
+
+  & > .card-view {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    width: 100vw; height: 100vh;
+    width: 100vw; height: 94vh;
     overflow-y: scroll;
-
+    
     &::-webkit-scrollbar {
       width:10px;
       background: inherit;
@@ -56,12 +150,11 @@ body {
     & .movie-card {
       cursor: pointer;
       position: relative;
-      width: 300px; height: 400px;
+      width: 200px; height: 300px;
       margin: 5px;
       overflow: hidden;
       
       & .star {
-        // display: none;
         position: absolute;
         top: 0; right: 0;
         font-size: 40px;
@@ -76,12 +169,12 @@ body {
 
       & .thumb {
         position: absolute;
-        width: 300px; height: 300px;
+        width: 200px; height: 200px;
         overflow: hidden;
       }
 
       & .image {
-        width: 300px; height: 300px; 
+        width: 200px; height: 200px; 
         background-image: url("http://opctl018t.bkt.clouddn.com/dva.jpg");
         background-position: center; 
         background-repeat: no-repeat; 
@@ -96,12 +189,12 @@ body {
 
       & .title {
         position: absolute;
-        top: 300px;
-        width: 290px; height: 50px;
-        line-height: 40px;
+        top: 200px;
+        width: 190px; height: 30px;
+        line-height: 30px;
         text-align: center;
         font-weight: bold;
-        font-size: 1.5rem;
+        font-size: .8rem;
         border: 5px solid white;
         color: white;
         background: black;
@@ -112,12 +205,12 @@ body {
         transition: .3s all ease;
 
         &::-webkit-scrollbar {
-          height:8px;
+          height:5px;
           background: inherit;
         }
 
         &::-webkit-scrollbar-thumb {
-          height: 8px;
+          height: 5px;
           background: white;
         }
       }
@@ -141,63 +234,63 @@ body {
       color: white;
       transform: translate(-50%, -50%);
     }
+  }
 
-    & > .movie-detail {
+  & > .movie-detail {
+    position: fixed;
+    top: 5%; right: 5%;
+    bottom: 5%; left: 5%;
+    border: 5px solid white;
+    background: black;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    z-index: 10;
+
+    &::-webkit-scrollbar {
+      width:10px;
+      background: inherit;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      width: 10px;
+      background: white;
+    }
+
+    & .close-btn {
       position: fixed;
-      top: 5%; right: 5%;
-      bottom: 5%; left: 5%;
-      border: 5px solid white;
-      background: black;
-      overflow-x: scroll;
-      overflow-y: scroll;
-      z-index: 3;
+      right: 5% + 1px;
+    }
 
-      &::-webkit-scrollbar {
-        width:10px;
-        background: inherit;
-      }
+    & .link-list {
+      padding: 0;
+      list-style: none;
 
-      &::-webkit-scrollbar-thumb {
-        width: 10px;
-        background: white;
-      }
+      & li {
+        margin: 20px 10px;
+        color: white;
 
-      & .close-btn {
-        position: fixed;
-        right: 5% + 1px;
-      }
-
-      & .link-list {
-        padding: 0;
-        list-style: none;
-
-        & li {
-          margin: 20px 10px;
+        & span {
+          margin: 10px 10px;
+          padding: 2px;
           color: white;
+          border: 1px dashed white;
+        }
 
-          & span {
-            margin: 10px 10px;
-            padding: 2px;
-            color: white;
-            border: 1px dashed white;
-          }
+        & a {
+          text-decoration: none;
+          white-space: nowrap;
+          font-size: 1.5rem;
+          line-height: 1.5rem;
+          padding: 3px;
+          background: black;
+          color: white;
+          border: 2px solid white;
+          transition: .3s all ease;
 
-          & a {
-            text-decoration: none;
-            white-space: nowrap;
-            font-size: 1.5rem;
-            line-height: 1.5rem;
-            padding: 3px;
-            background: black;
-            color: white;
-            border: 2px solid white;
-            transition: .3s all ease;
-
-            &:hover {
-              margin-left: 20px;
-              color: black;
-              background: white;
-            }
+          &:hover {
+            margin-left: 20px;
+            color: black;
+            background: white;
           }
         }
       }

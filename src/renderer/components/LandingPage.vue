@@ -9,13 +9,36 @@
       </div>
     </div>
     <RzAnima type="ball-3" v-show="isUpdating" class="loading-anime"></RzAnima>
-    <div class="movie-list" @scroll="handleScroll($event)" v-show="!isWelcome&&!isUpdating">
+    <div class="viewtype">
+      <section @click="isCardview = !isCardview">
+        <i class="material-icons icon" :class="{ off: !isCardview }">view_module</i>
+        <i class="material-icons icon" :class="{ off: isCardview }">list</i>
+        <div class="move-rect" :class="{ right: !isCardview }"></div>
+      </section>
+    </div>
+    <div class="list-view" v-show="!isWelcome&&!isUpdating&&!isCardview">
+      <ul class="movie-list">
+        <li v-for="(item, index) in storage" @click="showDetail(item)" v-show="!isSearch&&!isCollect"> 
+          {{ index + 1 }}. {{ item.title }}
+          <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
+        </li>
+        <li v-for="item in searchResult" @click="showDetail(item)" v-show="isSearch&&(searchResult.length !== 0)">
+          {{ index + 1 }}. {{ item.title }}
+          <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
+        </li>
+        <li v-for="(item, index) in storage" @click="showDetail(item)" v-show="!isSearch&&isCollect&&item.collected">
+          {{ index + 1 }}. {{ item.title }}
+          <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
+        </li>
+      </ul>
+    </div>
+    <div class="card-view" @scroll="handleScroll($event)" v-show="!isWelcome&&!isUpdating&&isCardview">
       <div class="movie-card" v-for="(item, index) in list" @click="showDetail(item)" v-show="!isSearch&&!isCollect">
         <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
         <div class="thumb">
           <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
         </div>
-        <div class="title">{{ item.title }}</div> 
+        <div class="title">{{ item.title }}</div>
       </div>
       <div class="movie-card" v-for="item in searchResult" @click="showDetail(item)" v-show="isSearch&&(searchResult.length !== 0)">
         <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
@@ -34,12 +57,12 @@
         </div>
         <div class="title">{{ item.title }}</div>
       </div>
-      <div class="movie-detail" v-show="isShowDetail">
-        <RzButton class="close-btn" type="mg" @click="cancel">Close</RzButton>
-        <ul class="link-list" v-for="item in selectItem">
-          <li v-for="source in item"><span>{{source.type}}</span><a :href="source.link" >{{ source.name }}</a></li>
-        </ul>
-      </div>
+    </div>
+    <div class="movie-detail" v-show="isShowDetail">
+      <RzButton class="close-btn" type="mg" @click="cancel">Close</RzButton>
+      <ul class="link-list" v-for="item in selectItem">
+        <li v-for="source in item"><span>{{source.type}}</span><a :href="source.link" >{{ source.name }}</a></li>
+      </ul>
     </div>
     <div class="toolkit" v-show="!useTool">
       <div class="tool-btn" @click="showSearchBar"><i class="material-icons icon">search</i></div>
@@ -91,8 +114,9 @@
         ],
         searchStr: '',
         list: [],
-        limit: 6,
-        page: 1
+        limit: 10,
+        page: 1,
+        isCardview: true
       }
     },
     components: {},
@@ -103,12 +127,10 @@
         this.storage[index].collected = !this.storage[index].collected
         localStorage.movie = JSON.stringify(this.storage)
       },
-      open (link) {
-        this.$electron.shell.openExternal(link)
-      },
       showDetail (item) {
         this.isShowDetail = true
         this.selectItem = item.resource
+        console.log(item.title)
       },
       cancel () {
         this.isShowDetail = false
