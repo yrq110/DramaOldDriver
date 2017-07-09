@@ -36,11 +36,11 @@ npm run build
 
 * Real-time Search
 
-![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/search.png)
+![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/search-view.png)
 
 * Favorites
 
-![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/favorites.png)
+![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/favorites-view.png)
 
 * Data Update
 
