@@ -1,0 +1,47 @@
+.info-btn {
+  position: fixed;
+  cursor: pointer;
+  user-select: none;
+  right: 10px; bottom: 0;
+  border-radius: 20px;
+  font-size: 40px;
+  background: black;
+  color: white;
+  z-index: 12;
+  transition: .3s all ease;
+
+  &:hover {
+    background: white;
+    color: black;
+  }
+  &:hover + .info-content{
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.info-content {
+  position: fixed;
+  right: 20px; bottom: 20px;
+  width: 150px;
+  background: black;
+  border-radius: 5px;
+  border: 3px solid white;  
+  visibility: hidden;
+  opacity: 0;
+  z-index: 11;
+  transition: .3s all ease;
+
+  & .info-list {
+    margin: 0; padding: 0;
+    margin-left: 5px;
+    list-style: none;
+    & li {
+      margin: 5px 0;
+    }
+    & span {
+      // border: 2px solid white;
+      color: white;
+    }
+  }
+}

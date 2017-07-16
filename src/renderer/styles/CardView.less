@@ -1,0 +1,107 @@
+.card-view {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 100vw; height: 94vh;
+  overflow-y: scroll;
+  
+  &::-webkit-scrollbar {
+    width:10px;
+    background: inherit;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 10px;
+    height: 20px;
+    background: white;
+  }
+
+  & .movie-card {
+
+    cursor: pointer;
+    position: relative;
+    width: 200px; height: 300px;
+    margin: 5px;
+    overflow: hidden;
+    
+    & .star {
+      position: absolute;
+      top: 0; right: 0;
+      font-size: 40px;
+      color: yellow;
+      user-select: none;
+      transition: .3s all ease;
+      z-index: 2;
+      &:hover {
+        transform: scale(1.3);
+      }
+    }
+
+    & .thumb {
+      position: absolute;
+      width: 200px; height: 200px;
+      overflow: hidden;
+    }
+
+    & .image {
+      width: 200px; height: 200px; 
+      background-image: url("http://opctl018t.bkt.clouddn.com/dva.jpg");
+      background-position: center; 
+      background-repeat: no-repeat; 
+      background-size: cover;
+      transition: .3s all ease;
+      transform-origin: 50% 50%;
+    }
+
+    &:hover .image {
+      transform: scale(1.3)
+    }
+
+    & .title {
+      position: absolute;
+      top: 200px;
+      width: 190px; height: 30px;
+      line-height: 30px;
+      text-align: center;
+      font-weight: bold;
+      font-size: .8rem;
+      border: 5px solid white;
+      color: white;
+      background: black;
+      white-space: nowrap;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      user-select: none;
+      transition: .3s all ease;
+
+      &::-webkit-scrollbar {
+        height:5px;
+        background: inherit;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        height: 5px;
+        background: white;
+      }
+    }
+
+    &:hover .title {
+      color: black;
+      background: white;
+    }
+
+    &:hover .title::-webkit-scrollbar-thumb {
+      background: black;
+    }
+  }
+
+  & > .nothing-message {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 100%;
+    text-align: center;
+    font-size: 3rem;
+    color: white;
+    transform: translate(-50%, -50%);
+  }
+}

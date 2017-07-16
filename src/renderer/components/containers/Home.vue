@@ -1,99 +1,84 @@
 <template>
-  <div class="landing">
-    <div class="mask" v-show="isWelcome">
-      <RzAnima type="text-1" :textStroke="textStroke" class="logo-anime">
-        <template slot="text">Drama</template>
-      </RzAnima>
-      <div class="go-btn">
-        <RzButton type="ace" @click="getAll"><template slot="inner-txt">Go</template></RzButton>
-      </div>
-    </div>
+  <div class="home">
+    <welcome 
+      @getAll="getAll" 
+      v-show="isWelcome" 
+    />
+
     <RzAnima type="ball-3" v-show="isUpdating" class="loading-anime"></RzAnima>
-    <div class="viewtype">
-      <section @click="isCardview = !isCardview">
-        <i class="material-icons icon" :class="{ off: !isCardview }">view_module</i>
-        <i class="material-icons icon" :class="{ off: isCardview }">list</i>
-        <div class="move-rect" :class="{ right: !isCardview }"></div>
-      </section>
-    </div>
-    <div class="list-view" v-show="!isWelcome&&!isUpdating&&!isCardview">
-      <ul class="movie-list">
-        <li v-for="(item, index) in storage" @click="showDetail(item)" v-show="!isSearch&&!isCollect"> 
-          {{ index + 1 }}. {{ item.title }}
-          <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
-        </li>
-        <li v-for="item in searchResult" @click="showDetail(item)" v-show="isSearch&&(searchResult.length !== 0)">
-          {{ index + 1 }}. {{ item.title }}
-          <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
-        </li>
-        <li v-for="(item, index) in storage" @click="showDetail(item)" v-show="!isSearch&&isCollect&&item.collected">
-          {{ index + 1 }}. {{ item.title }}
-          <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
-        </li>
-      </ul>
-    </div>
-    <div class="card-view" @scroll="handleScroll($event)" v-show="!isWelcome&&!isUpdating&&isCardview">
-      <div class="movie-card" v-for="(item, index) in list" @click="showDetail(item)" v-show="!isSearch&&!isCollect">
-        <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
-        <div class="thumb">
-          <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
-        </div>
-        <div class="title">{{ item.title }}</div>
-      </div>
-      <div class="movie-card" v-for="item in searchResult" @click="showDetail(item)" v-show="isSearch&&(searchResult.length !== 0)">
-        <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
-        <div class="thumb">
-          <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
-        </div>
-        <div class="title">{{ item.title }}</div> 
-      </div>
-      <div class="nothing-message" v-show="isSearch&&(searchResult.length == 0)">
-         _(:3 」∠)_ Nothing found
-      </div>
-      <div class="movie-card" v-for="(item, index) in storage" @click="showDetail(item)" v-show="!isSearch&&isCollect&&item.collected">
-        <i class="material-icons star" @click="collectMovie(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
-        <div class="thumb">
-          <div class="image" :style="{backgroundImage: 'url('+ item.poster + ')'}"></div>  
-        </div>
-        <div class="title">{{ item.title }}</div>
-      </div>
-    </div>
-    <div class="movie-detail" v-show="isShowDetail">
-      <RzButton class="close-btn" type="mg" @click="cancel">Close</RzButton>
-      <ul class="link-list" v-for="item in selectItem">
-        <li v-for="source in item"><span>{{source.type}}</span><a :href="source.link" >{{ source.name }}</a></li>
-      </ul>
-    </div>
-    <div class="toolkit" v-show="!useTool">
-      <div class="tool-btn" @click="showSearchBar"><i class="material-icons icon">search</i></div>
-      <div class="tool-btn" @click="showCollectMovie"><i class="material-icons icon" @click="isMarkActive = !isMarkActive" :class="{active: isMarkActive}">bookmark_border</i></div>
-      <div class="tool-btn" @click="closeWindow"><i class="material-icons icon">close</i></div>
-    </div>
-    <div class="searchBar" v-show="isSearchBar">
-      <input class="search-input" type="text" name="search" v-model="searchStr" placeholder="搜索"/>
-      <i class="material-icons icon" @click="closeSearchBar">close</i>
-    </div>
+    
+    <type-toggle 
+      @view-toggle="toggleView" 
+      :toggle="isCardview" 
+    />
+
+    <card-view 
+      @card-view-scroll="handleScroll"
+      @card-click="showDetail"
+      @card-collect="collectMovie"
+      :list="list"
+      :searchResult="searchResult"
+      :storage="storage"
+      :isSearch="isSearch"
+      :isFavorite="isFavorite"
+      v-show="!isWelcome&&!isUpdating&&isCardview"
+    />
+
+    <list-view 
+      @card-click="showDetail"
+      @card-collect="collectMovie"
+      :list="list"
+      :searchResult="searchResult"
+      :storage="storage"
+      :isSearch="isSearch"
+      :isFavorite="isFavorite"
+      v-show="!isWelcome&&!isUpdating&&!isCardview"
+    />
+
+    <movie-detail 
+      @detail-close="closeDetail" 
+      :selectItem="selectItem"
+      v-show="isShowDetail" 
+    />
+
+    <tool-kit 
+      @search-show="showSearchBar" 
+      @favorite-show="showCollectMovie" 
+      @window-close="closeWindow" 
+      :isFavorite="isFavorite" 
+      v-show="!useTool" 
+    />
+
+    <search-bar 
+      @search-bar-close="closeSearchBar"
+      v-model="searchStr"
+      v-show="isSearchBar"
+    />
+
     <i class="material-icons update-btn" @click="updateData">update</i>
-    <i class="material-icons info-btn">info_outline</i>
-    <div class="info-content">
-      <ul class="info-list">
-        <li><span>Core:</span>  <span>Vue + Electron</span></li>
-        <li><span>UI:</span>  <span>Custom + RizuUI</span></li>
-        <li><span>Author:</span> <span>yrq110</span></li>
-        <li><span>Version:</span> <span>{{ version }}</span></li>
-      </ul>
-    </div>
+    
+    <info 
+      :version="version"
+    />
   </div>
 </template>
 
 <script>
-  // import movieData from '../assets/data.json'
-  // import movieData from '../assets/6v_data.json'
-  import config from '../../../package.json'
+  import Welcome from '../views/Welcome'
+  import TypeToggle from '../views/TypeToggle'
+  import MovieDetail from '../views/MovieDetail'
+  import ToolKit from '../views/ToolKit'
+  import CardView from '../views/CardView'
+  import ListView from '../views/ListView'
+  import SearchBar from '../views/SearchBar'
+  import Info from '../views/Info'
+
+  import config from '../../../../package.json'
   const ipc = require('electron').ipcRenderer
   const api = 'http://dodserver.leanapp.cn'
+
   export default {
-    name: 'landing-page',
+    name: 'home',
     data () {
       return {
         random: '',
@@ -101,17 +86,13 @@
         isWelcome: true,
         isUpdating: false,
         isSearch: false,
-        isCollect: false,
+        isFavorite: false,
         isSearchBar: false,
-        isMarkActive: false,
         useTool: false,
         selectItem: {},
         storage: [],
         storageTitle: [],
         searchResult: [],
-        textStroke: [
-          'white', '#222', 'grey'
-        ],
         searchStr: '',
         list: [],
         limit: 10,
@@ -119,7 +100,16 @@
         isCardview: true
       }
     },
-    components: {},
+    components: {
+      Welcome,
+      TypeToggle,
+      MovieDetail,
+      ToolKit,
+      CardView,
+      ListView,
+      SearchBar,
+      Info
+    },
     methods: {
       collectMovie (index, event) {
         event.stopPropagation()
@@ -132,8 +122,11 @@
         this.selectItem = item.resource
         console.log(item.title)
       },
-      cancel () {
+      closeDetail () {
         this.isShowDetail = false
+      },
+      toggleView () {
+        this.isCardview = !this.isCardview
       },
       getAll () {
         if (typeof (localStorage.movie) === 'undefined') {
@@ -204,7 +197,7 @@
         this.useTool = false
       },
       showCollectMovie () {
-        this.isCollect = !this.isCollect
+        this.isFavorite = !this.isFavorite
       },
       updateData () {
         var collectMovie = []
@@ -276,6 +269,6 @@
   }
 </script>
 
-<style lang="less">
-  @import './LandingPage.less';
+<style lang="less" scoped>
+  @import '../../styles/Home.less';
 </style>

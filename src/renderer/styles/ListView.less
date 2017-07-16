@@ -1,0 +1,50 @@
+.list-view {
+  width: 100vw; height: 90vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width:10px;
+    background: inherit;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 10px;
+    background: white;
+  }
+
+  & .movie-list {
+    padding: 0 10%;
+    list-style: none;
+    
+    & li {
+      cursor: pointer;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      padding-left: 5px;
+      border: 2px solid white;
+      border-bottom: 0;
+      transition: .3s all ease;
+
+      &:last-child {
+        border-bottom: 2px solid white;
+      }
+
+      &:hover {
+        margin: 0 20px;
+        color: black;
+        background: white;
+      }
+
+      & .star {
+        // position: relative;
+        // right: 0;
+        color: yellow;
+        user-select: none;
+        transition: .3s all ease;
+        z-index: 2;
+      }
+    }
+  }
+} 

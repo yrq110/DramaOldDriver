@@ -1,0 +1,60 @@
+.movie-detail {
+  position: fixed;
+  top: 5%; right: 5%;
+  bottom: 5%; left: 5%;
+  border: 5px solid white;
+  background: black;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  z-index: 10;
+
+  &::-webkit-scrollbar {
+    width:10px;
+    background: inherit;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 10px;
+    background: white;
+  }
+
+  & .close-btn {
+    position: fixed;
+    right: 5% + 1px;
+  }
+
+  & .link-list {
+    padding: 0;
+    list-style: none;
+
+    & li {
+      margin: 20px 10px;
+      color: white;
+
+      & span {
+        margin: 10px 10px;
+        padding: 2px;
+        color: white;
+        border: 1px dashed white;
+      }
+
+      & a {
+        text-decoration: none;
+        white-space: nowrap;
+        font-size: 1.5rem;
+        line-height: 1.5rem;
+        padding: 3px;
+        background: black;
+        color: white;
+        border: 2px solid white;
+        transition: .3s all ease;
+
+        &:hover {
+          margin-left: 20px;
+          color: black;
+          background: white;
+        }
+      }
+    }
+  }
+}

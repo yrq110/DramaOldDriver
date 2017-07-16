@@ -1,0 +1,30 @@
+.searchBar {
+  position: fixed;
+  bottom: 0; left: 50%;
+  height: 40px;
+  background: white;
+  border-left: 3px solid red;
+  transform: translateX(-120px);
+
+  & .search-input {
+    position: absolute;
+    top: 0; left: 0;
+    height: 40px; width: 200px;
+    background: black;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    padding: 0 10px;
+  }
+
+  & i {
+    cursor: pointer;
+    position: absolute;
+    top: 0; left: 220px;
+    font-size: 40px;
+    color: white;
+    background: black;
+  }
+}

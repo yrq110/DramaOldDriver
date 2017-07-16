@@ -1,0 +1,30 @@
+.toolkit {
+  z-index: 10;
+  position: fixed;
+  bottom: 0;left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+
+  & .tool-btn {
+    cursor: pointer;
+    user-select: none;
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: black;
+    margin: 0 10px;
+    transition: .3s all ease;
+
+    &:hover {
+      margin-top: -5px;
+    }
+    
+    & .icon {
+      font-size: 40px;
+      color: white;
+    }
+
+    & .active {
+      color: yellow;
+    }
+  }
+}

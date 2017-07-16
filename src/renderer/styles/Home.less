@@ -1,0 +1,33 @@
+.home {
+
+  & > .loading-anime {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10;
+  }
+
+  & .update-btn {
+    position: fixed;
+    cursor: pointer;
+    user-select: none;
+    left: 0; bottom: 0;
+    border-radius: 20px;
+    font-size: 40px;
+    background: black;
+    color: white;
+    z-index: 12;
+    transition: .3s all ease;
+    &:hover {
+      background: white;
+      color: black;
+    }
+    &:active {
+      transform: scale(0.8)
+    }
+  }
+}
+
+  
+
+  

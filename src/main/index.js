@@ -25,7 +25,7 @@ function createWindow () {
     height: 650,
     width: 1200,
     useContentSize: true,
-    transparent: true,
+    // transparent: true,
     frame: false,
     // resizable: false,
     // enable CORS
