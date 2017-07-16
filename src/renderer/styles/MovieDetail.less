@@ -8,6 +8,10 @@
   overflow-y: scroll;
   z-index: 10;
 
+  & .cb-btn {
+    color: white;
+  }
+
   &::-webkit-scrollbar {
     width:10px;
     background: inherit;
@@ -30,6 +34,8 @@
     & li {
       margin: 20px 10px;
       color: white;
+      white-space: nowrap;
+      overflow: hidden;
 
       & span {
         margin: 10px 10px;
@@ -39,11 +45,12 @@
       }
 
       & a {
+        margin-left: -15px;
+        padding: 3px;
         text-decoration: none;
         white-space: nowrap;
         font-size: 1.5rem;
         line-height: 1.5rem;
-        padding: 3px;
         background: black;
         color: white;
         border: 2px solid white;
@@ -54,6 +61,10 @@
           color: black;
           background: white;
         }
+      }
+
+      & .cb-btn svg path {
+        stroke: white;
       }
     }
   }

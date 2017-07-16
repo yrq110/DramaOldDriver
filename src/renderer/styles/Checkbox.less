@@ -1,0 +1,74 @@
+.checkbox {
+  display: inline-block;
+  font-size:1.5625rem;
+  position: relative;
+  margin-right: 0.625rem;
+  margin-bottom: 0.625rem;
+  user-select: none;
+
+  & input[type="checkbox"]{
+    display: none !important;
+    appearance: none;
+    display: inline-block;
+    width: 2.1875rem;
+    height: 2.1875rem;
+    background: #fff;
+    vertical-align: top;
+    position: relative;
+    top: -0.3125rem;
+    margin-right: 0.625rem;
+    box-sizing: border-box;
+    border: 0.1875rem solid #999;
+    border-radius: 0.1875rem;
+    transition: border 0.3s;
+  }
+
+  & input[type="checkbox"]:checked ~ label::before {
+    border: 0.1875rem solid white;
+  }
+
+  & input[type="checkbox"]:checked ~ label svg path{
+    stroke-dashoffset:0;
+    stroke-opacity:1;
+  }
+
+  & label{
+    cursor: pointer;
+    color: #999;
+    transition: color　0.3s;
+  }
+
+  & label:before{
+    content : '';
+    display: inline-block;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: 0.9375rem;
+    position: relative;
+    top: 0.4375rem;
+    border: 0.1875rem solid #999;
+    border-radius: 0.1875rem;
+  }
+
+  & svg{
+    width: 1.5rem;
+    height: 1.5rem;
+    left : 0.25rem;
+    top : 0.8125rem;
+    position: absolute;
+    z-index: 1;
+  }
+
+  & svg path {
+    fill: none;
+    stroke: white;
+    stroke-linejoin:round;
+    stroke-linecap:round;
+    stroke-dasharray: 51;
+    stroke-dashoffset:51;
+    stroke-opacity:0;
+    stroke-width:0.25rem;
+    transition: stroke-dashoffset 0.3s ease, stroke-opacity 0.3s;
+  }
+}
+
