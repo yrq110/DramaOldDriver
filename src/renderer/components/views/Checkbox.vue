@@ -1,6 +1,6 @@
 <template>
   <div class="checkbox">
-    <input type="checkbox" :id="label" :name="name" :value="label" v-model="model"/>
+    <input type="checkbox" :id="label" :name="name" :value="label" v-model="model" @click="inputClick"/>
     <label :for="label">
       <slot></slot>
       <svg viewBox="0 0 32 32">
@@ -11,7 +11,7 @@
 </template>
 <script>
 export default {
-  name: 'RzCheckbox',
+  name: 'Checkbox',
   props: {
     name: {
       type: String
@@ -30,6 +30,11 @@ export default {
         // console.log('set value: ' + val)
         this.$emit('input', val)
       }
+    }
+  },
+  methods: {
+    inputClick () {
+      this.$emit('input-click')
     }
   }
 }

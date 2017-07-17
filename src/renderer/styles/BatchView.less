@@ -1,0 +1,105 @@
+.batch {
+  position: fixed;
+  width: 250px; height: 400px;
+  padding: 0 10px;
+  right: 10px; bottom: 40px;
+  border-radius: 5px;
+  background: black;
+  overflow: hidden;
+  z-index: 13;
+  transition: .3s all ease;
+
+  & .list {
+    overflow-x: hidden;
+    overflow-y: scroll; 
+    height: 360px;
+    margin: 0; padding: 0;
+
+    & li {
+      margin: 0; padding: 0;
+
+      & .del-section {
+        cursor: pointer;
+        margin: 0; padding: 0;
+        width: 100%; height: 20px;
+        background: black;
+        color: white;
+        transition: .3s all ease;
+
+        & .del-btn {
+          margin-left: 50%;
+          transform: translateX(-50%);
+          font-size: 20px;
+          transition: .3s all ease;
+        }
+
+        &:hover {
+          background: white;
+          & .del-btn {
+            color: black;
+          }
+        }
+      }
+
+      & .name {
+        padding: 5px;
+        font-size: .8rem;
+        line-height: .8rem;
+        word-break: break-all;
+        background: black;
+        color: white;
+        border: 2px solid white;
+        transition: .3s all ease;
+      }
+
+      & .del-section:hover + .name {
+        background:white;
+        color: black;
+        // border-color: black;
+        border: none;
+      }
+    }
+
+    &::-webkit-scrollbar {
+      width:10px;
+      background: black;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      width: 10px;
+      background: white;
+    }
+  }
+
+  & .dl-section {
+    cursor: pointer;
+    position: absolute;
+    width: 100%; height: 40px;
+    left: 0; bottom: 0;
+    position: absolute;
+    background: black;
+    color: white;
+    transition: .3s all ease;
+
+    & .dl-btn {
+      margin-left: 50%;
+      user-select: none;
+      font-size: 40px;
+      background: black;
+      color: white;
+      transform: translateX(-50%);
+      transition: .3s all ease;
+    }
+
+    &:hover {
+      background: white;
+      & .dl-btn {
+        background: white;
+        color: black;
+      }
+    }
+    
+  }
+
+  
+}

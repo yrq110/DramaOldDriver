@@ -1,10 +1,10 @@
 <template>
   <div class="movie-detail">
     <RzButton class="close-btn" type="mg" @click="close">Close</RzButton>
-    <ul class="link-list" v-for="item in selectItem">
+    <ul class="link-list" v-for="item in selectItem.resource">
       <li v-for="source in item">
         <span>{{source.type}}</span>
-        <checkbox :label="source.link" name="batch" v-model="batchMovie"></checkbox>
+        <checkbox :label="combineLabel(source.name, source.link)" :name="selectItem.title" v-model="batchMovie" @input-click="checkClick"></checkbox>
         <a :href="source.link" >{{ source.name }}</a></li>
     </ul>
   </div>
@@ -21,7 +21,7 @@ export default {
   },
   props: {
     selectItem: {
-      type: Object
+      type: [Array, Object]
     }
   },
   components: {
@@ -30,11 +30,19 @@ export default {
   methods: {
     close () {
       this.$emit('detail-close')
+    },
+    checkClick () {
+      this.$emit('check-click', this.batchMovie)
+      // this.$emit('check-click', this.batchMovie, this.selectItem.title)
+      console.log(this.batchMovie)
+    },
+    combineLabel (name, link) {
+      return `${name}+${link}`
     }
   },
   watch: {
     batchMovie () {
-      console.log(this.batchMovie.length)
+      // console.log(this.batchMovie.length)
     }
   }
 }

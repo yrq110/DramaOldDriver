@@ -1,16 +1,20 @@
 <template>
   <div class="home">
+    <!-- welcome view  -->
     <welcome 
       @getAll="getAll" 
       v-show="isWelcome" 
     />
-
     <RzAnima type="ball-3" v-show="isUpdating" class="loading-anime"></RzAnima>
     
+    <!-- top view  -->
+
     <type-toggle 
       @view-toggle="toggleView" 
       :toggle="isCardview" 
     />
+
+    <!-- main views  -->
 
     <card-view 
       @card-view-scroll="handleScroll"
@@ -37,10 +41,12 @@
 
     <movie-detail 
       @detail-close="closeDetail" 
+      @check-click="batchLinks"
       :selectItem="selectItem"
       v-show="isShowDetail" 
     />
 
+    <!-- bottom views  -->
     <tool-kit 
       @search-show="showSearchBar" 
       @favorite-show="showCollectMovie" 
@@ -55,11 +61,19 @@
       v-show="isSearchBar"
     />
 
+    <batch-view
+      @delete-batch-link="deleteBatchLink"
+      @batch-download="downloadBatch"
+      :batchLinks="selectLinks"
+      v-show="selectLinks.length !== 0"
+    />
+    
     <i class="material-icons update-btn" @click="updateData">update</i>
     
     <info 
       :version="version"
     />
+    <div class="batch-links"></div>
   </div>
 </template>
 
@@ -72,6 +86,7 @@
   import ListView from '../views/ListView'
   import SearchBar from '../views/SearchBar'
   import Info from '../views/Info'
+  import BatchView from '../views/BatchView'
 
   import config from '../../../../package.json'
   const ipc = require('electron').ipcRenderer
@@ -90,6 +105,8 @@
         isSearchBar: false,
         useTool: false,
         selectItem: {},
+        // selectLinks: {},
+        selectLinks: [],
         storage: [],
         storageTitle: [],
         searchResult: [],
@@ -108,7 +125,8 @@
       CardView,
       ListView,
       SearchBar,
-      Info
+      Info,
+      BatchView
     },
     methods: {
       collectMovie (index, event) {
@@ -119,11 +137,16 @@
       },
       showDetail (item) {
         this.isShowDetail = true
-        this.selectItem = item.resource
+        // this.selectItem = item.resource
+        this.selectItem = item
         console.log(item.title)
       },
       closeDetail () {
         this.isShowDetail = false
+      },
+      batchLinks (arr) {
+        this.selectLinks = arr
+        // this.selectLinks[title] = arr
       },
       toggleView () {
         this.isCardview = !this.isCardview
@@ -196,6 +219,34 @@
         this.isSearchBar = false
         this.useTool = false
       },
+      deleteBatchLink (index) {
+        console.log('delete')
+        this.selectLinks.splice(index, 1)
+        console.log(`count: ${this.selectLinks.length}`)
+      },
+      downloadBatch () {
+        let div = document.querySelector('.batch-links')
+        div.innerHTML = ''
+        let aArr = []
+        for (let link of this.selectLinks) {
+          if (typeof (link) === 'string') {
+            let a = document.createElement('a')
+            a.href = link.split('+')[1]
+            aArr.push(a)
+            div.appendChild(a)
+          }
+        }
+        let i = 0
+        let timer = setInterval(function () {
+          if (i < aArr.length) {
+            aArr[i].click()
+            console.log(aArr[i])
+            i = i + 1
+          } else {
+            clearInterval(timer)
+          }
+        }, 300)
+      },
       showCollectMovie () {
         this.isFavorite = !this.isFavorite
       },
@@ -236,6 +287,12 @@
       closeWindow () {
         console.log('close')
         ipc.send('close-window', null)
+      },
+      isNullObject (obj) {
+        for (let key in obj) {
+          if (key) return false
+        }
+        return true
       }
     },
     created: function () {
