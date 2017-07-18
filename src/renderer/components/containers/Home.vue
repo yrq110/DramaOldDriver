@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+
     <!-- welcome view  -->
     <welcome 
       @getAll="getAll" 
@@ -8,14 +9,12 @@
     <RzAnima type="ball-3" v-show="isUpdating" class="loading-anime"></RzAnima>
     
     <!-- top view  -->
-
     <type-toggle 
       @view-toggle="toggleView" 
       :toggle="isCardview" 
     />
 
     <!-- main views  -->
-
     <card-view 
       @card-view-scroll="handleScroll"
       @card-click="showDetail"
@@ -63,6 +62,7 @@
 
     <batch-view
       @delete-batch-link="deleteBatchLink"
+      @batch-clear="clearBatch"
       @batch-download="downloadBatch"
       :batchLinks="selectLinks"
       v-show="selectLinks.length !== 0"
@@ -105,7 +105,6 @@
         isSearchBar: false,
         useTool: false,
         selectItem: {},
-        // selectLinks: {},
         selectLinks: [],
         storage: [],
         storageTitle: [],
@@ -146,6 +145,7 @@
       },
       batchLinks (arr) {
         this.selectLinks = arr
+        // this.selectLinks = this.selectLinks.concat(arr)
         // this.selectLinks[title] = arr
       },
       toggleView () {
@@ -220,9 +220,12 @@
         this.useTool = false
       },
       deleteBatchLink (index) {
-        console.log('delete')
         this.selectLinks.splice(index, 1)
-        console.log(`count: ${this.selectLinks.length}`)
+      },
+      clearBatch () {
+        while (this.selectLinks.length !== 0) {
+          this.selectLinks.splice(0, 1)
+        }
       },
       downloadBatch () {
         let div = document.querySelector('.batch-links')
@@ -245,7 +248,7 @@
           } else {
             clearInterval(timer)
           }
-        }, 300)
+        }, 500)
       },
       showCollectMovie () {
         this.isFavorite = !this.isFavorite

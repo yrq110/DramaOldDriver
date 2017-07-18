@@ -14,9 +14,7 @@ export default {
   name: 'welcome',
   data () {
     return {
-      textStroke: [
-        'white', '#222', 'grey'
-      ]
+      textStroke: ['white', '#222', 'grey']
     }
   },
   methods: {

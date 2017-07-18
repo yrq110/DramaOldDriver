@@ -2,14 +2,17 @@
   <div class="batch">
     <ul class="list">
       <li v-for="(batchLink, index) in batchLinks">
-        <div class="del-section" @click="deleteLink(index)">
+        <div class="del-link" @click="deleteLink(index)">
           <i class="material-icons del-btn">delete</i>
         </div>
         <div class="name">{{ parseStr(batchLink).name }}</div>
       </li>
     </ul>
-    <div class="dl-section">
-      <i class="material-icons dl-btn" @click="batchDownload">vertical_align_bottom</i>
+    <div class="del-section section">
+      <i class="material-icons tool-btn" @click="batchClear">delete_forever</i>
+    </div>
+    <div class="dl-section section">
+      <i class="material-icons tool-btn" @click="batchDownload">vertical_align_bottom</i>
     </div>
   </div>
 </template>
@@ -24,7 +27,10 @@ export default {
   methods: {
     deleteLink (index) {
       this.$emit('delete-batch-link', index)
-      console.log(index)
+      // console.log(index)
+    },
+    batchClear () {
+      this.$emit('batch-clear')
     },
     batchDownload () {
       this.$emit('batch-download')
