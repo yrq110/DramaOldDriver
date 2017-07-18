@@ -36,7 +36,11 @@ npm run build
 
 * Resource View
 
-![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/resource-view.png)
+![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/resource-list.png)
+
+* Batch Download
+
+![](https://github.com/yrq110/DramaOldDriver-client/blob/master/static/screenshots/batch-view.png)
 
 * Real-time Search
 
