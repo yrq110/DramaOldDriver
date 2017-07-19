@@ -14,6 +14,9 @@
         <i class="material-icons star" @click="cardCollect(index, $event)">{{ item.collected ? 'star' : 'star_border' }}</i>
       </li>
     </ul>
+    <div class="nothing-message" v-show="isSearch&&(searchResult.length == 0)">
+      _(:3 」∠)_ Nothing found
+    </div>
   </div>
 </template>
 

@@ -3,7 +3,6 @@ import axios from 'axios'
 
 import App from './App'
 import router from './router'
-import store from './store'
 
 import RizuUI from 'rizu-ui'
 import 'rizu-ui/dist/styles/rizuui.css'
@@ -19,6 +18,5 @@ Vue.config.productionTip = false
 new Vue({
   components: { App },
   router,
-  store,
   template: '<App/>'
 }).$mount('#app')
