@@ -16,7 +16,7 @@
 
     <!-- main views  -->
     <card-view 
-      @card-view-scroll="handleScroll"
+      @card-view-scroll="scrolling"
       @card-click="showDetail"
       @card-collect="collectMovie"
       :list="list"
@@ -200,6 +200,16 @@
         }
         this.isWelcome = false
         console.log(this.list.length)
+      },
+      scrolling (e) {
+        if (this.scrollFlag) {
+          return
+        }
+        this.scrollFlag = true
+        setTimeout(() => {
+          this.handleScroll(e)
+          this.scrollFlag = false
+        }, 500)
       },
       handleScroll (e) {
         if (e.target.scrollTop + e.target.offsetHeight + 5 > e.target.scrollHeight) {
